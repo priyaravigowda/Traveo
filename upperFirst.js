@@ -1,5 +1,5 @@
 var convert = require('./convert'),
-    func = convert('transform', require('../transform'));
+    func = convert('upperFirst', require('../upperFirst'), require('./_falseOptions'));
 
 func.placeholder = require('./placeholder');
 module.exports = func;

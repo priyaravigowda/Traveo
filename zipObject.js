@@ -1,5 +1,5 @@
 var convert = require('./convert'),
-    func = convert('transform', require('../transform'));
+    func = convert('zipObject', require('../zipObject'));
 
 func.placeholder = require('./placeholder');
 module.exports = func;
