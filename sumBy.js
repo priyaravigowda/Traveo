@@ -1,5 +1,5 @@
 var convert = require('./convert'),
-    func = convert('times', require('../times'));
+    func = convert('sumBy', require('../sumBy'));
 
 func.placeholder = require('./placeholder');
 module.exports = func;

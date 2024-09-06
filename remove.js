@@ -1,5 +1,5 @@
 var convert = require('./convert'),
-    func = convert('times', require('../times'));
+    func = convert('remove', require('../remove'));
 
 func.placeholder = require('./placeholder');
 module.exports = func;
