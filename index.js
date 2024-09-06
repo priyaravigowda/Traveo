@@ -1,588 +1,668 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.doDuring = exports.during = exports.wrapSync = undefined;
-exports.selectSeries = exports.selectLimit = exports.select = exports.foldr = exports.foldl = exports.inject = exports.forEachOfLimit = exports.forEachOfSeries = exports.forEachOf = exports.forEachLimit = exports.forEachSeries = exports.forEach = exports.flatMapSeries = exports.flatMapLimit = exports.flatMap = exports.findSeries = exports.findLimit = exports.find = exports.anySeries = exports.anyLimit = exports.any = exports.allSeries = exports.allLimit = exports.all = exports.whilst = exports.waterfall = exports.until = exports.unmemoize = exports.tryEach = exports.transform = exports.timesSeries = exports.timesLimit = exports.times = exports.timeout = exports.sortBy = exports.someSeries = exports.someLimit = exports.some = exports.setImmediate = exports.series = exports.seq = exports.retryable = exports.retry = exports.rejectSeries = exports.rejectLimit = exports.reject = exports.reflectAll = exports.reflect = exports.reduceRight = exports.reduce = exports.race = exports.queue = exports.priorityQueue = exports.parallelLimit = exports.parallel = exports.nextTick = exports.memoize = exports.mapValuesSeries = exports.mapValuesLimit = exports.mapValues = exports.mapSeries = exports.mapLimit = exports.map = exports.log = exports.groupBySeries = exports.groupByLimit = exports.groupBy = exports.forever = exports.filterSeries = exports.filterLimit = exports.filter = exports.everySeries = exports.everyLimit = exports.every = exports.ensureAsync = exports.eachSeries = exports.eachOfSeries = exports.eachOfLimit = exports.eachOf = exports.eachLimit = exports.each = exports.doWhilst = exports.doUntil = exports.dir = exports.detectSeries = exports.detectLimit = exports.detect = exports.constant = exports.concatSeries = exports.concatLimit = exports.concat = exports.compose = exports.cargoQueue = exports.cargo = exports.autoInject = exports.auto = exports.asyncify = exports.applyEachSeries = exports.applyEach = exports.apply = undefined;
-
-var _apply = require('./apply');
-
-var _apply2 = _interopRequireDefault(_apply);
-
-var _applyEach = require('./applyEach');
-
-var _applyEach2 = _interopRequireDefault(_applyEach);
-
-var _applyEachSeries = require('./applyEachSeries');
-
-var _applyEachSeries2 = _interopRequireDefault(_applyEachSeries);
-
-var _asyncify = require('./asyncify');
-
-var _asyncify2 = _interopRequireDefault(_asyncify);
-
-var _auto = require('./auto');
-
-var _auto2 = _interopRequireDefault(_auto);
-
-var _autoInject = require('./autoInject');
-
-var _autoInject2 = _interopRequireDefault(_autoInject);
-
-var _cargo = require('./cargo');
-
-var _cargo2 = _interopRequireDefault(_cargo);
-
-var _cargoQueue = require('./cargoQueue');
-
-var _cargoQueue2 = _interopRequireDefault(_cargoQueue);
-
-var _compose = require('./compose');
-
-var _compose2 = _interopRequireDefault(_compose);
-
-var _concat = require('./concat');
-
-var _concat2 = _interopRequireDefault(_concat);
-
-var _concatLimit = require('./concatLimit');
-
-var _concatLimit2 = _interopRequireDefault(_concatLimit);
-
-var _concatSeries = require('./concatSeries');
-
-var _concatSeries2 = _interopRequireDefault(_concatSeries);
-
-var _constant = require('./constant');
-
-var _constant2 = _interopRequireDefault(_constant);
-
-var _detect = require('./detect');
-
-var _detect2 = _interopRequireDefault(_detect);
-
-var _detectLimit = require('./detectLimit');
-
-var _detectLimit2 = _interopRequireDefault(_detectLimit);
-
-var _detectSeries = require('./detectSeries');
-
-var _detectSeries2 = _interopRequireDefault(_detectSeries);
-
-var _dir = require('./dir');
-
-var _dir2 = _interopRequireDefault(_dir);
-
-var _doUntil = require('./doUntil');
-
-var _doUntil2 = _interopRequireDefault(_doUntil);
-
-var _doWhilst = require('./doWhilst');
-
-var _doWhilst2 = _interopRequireDefault(_doWhilst);
-
-var _each = require('./each');
-
-var _each2 = _interopRequireDefault(_each);
-
-var _eachLimit = require('./eachLimit');
-
-var _eachLimit2 = _interopRequireDefault(_eachLimit);
-
-var _eachOf = require('./eachOf');
-
-var _eachOf2 = _interopRequireDefault(_eachOf);
-
-var _eachOfLimit = require('./eachOfLimit');
-
-var _eachOfLimit2 = _interopRequireDefault(_eachOfLimit);
-
-var _eachOfSeries = require('./eachOfSeries');
-
-var _eachOfSeries2 = _interopRequireDefault(_eachOfSeries);
-
-var _eachSeries = require('./eachSeries');
-
-var _eachSeries2 = _interopRequireDefault(_eachSeries);
-
-var _ensureAsync = require('./ensureAsync');
-
-var _ensureAsync2 = _interopRequireDefault(_ensureAsync);
-
-var _every = require('./every');
-
-var _every2 = _interopRequireDefault(_every);
-
-var _everyLimit = require('./everyLimit');
-
-var _everyLimit2 = _interopRequireDefault(_everyLimit);
-
-var _everySeries = require('./everySeries');
-
-var _everySeries2 = _interopRequireDefault(_everySeries);
-
-var _filter = require('./filter');
-
-var _filter2 = _interopRequireDefault(_filter);
-
-var _filterLimit = require('./filterLimit');
-
-var _filterLimit2 = _interopRequireDefault(_filterLimit);
-
-var _filterSeries = require('./filterSeries');
-
-var _filterSeries2 = _interopRequireDefault(_filterSeries);
-
-var _forever = require('./forever');
-
-var _forever2 = _interopRequireDefault(_forever);
-
-var _groupBy = require('./groupBy');
-
-var _groupBy2 = _interopRequireDefault(_groupBy);
-
-var _groupByLimit = require('./groupByLimit');
-
-var _groupByLimit2 = _interopRequireDefault(_groupByLimit);
-
-var _groupBySeries = require('./groupBySeries');
-
-var _groupBySeries2 = _interopRequireDefault(_groupBySeries);
-
-var _log = require('./log');
-
-var _log2 = _interopRequireDefault(_log);
-
-var _map = require('./map');
-
-var _map2 = _interopRequireDefault(_map);
-
-var _mapLimit = require('./mapLimit');
-
-var _mapLimit2 = _interopRequireDefault(_mapLimit);
-
-var _mapSeries = require('./mapSeries');
-
-var _mapSeries2 = _interopRequireDefault(_mapSeries);
-
-var _mapValues = require('./mapValues');
-
-var _mapValues2 = _interopRequireDefault(_mapValues);
-
-var _mapValuesLimit = require('./mapValuesLimit');
-
-var _mapValuesLimit2 = _interopRequireDefault(_mapValuesLimit);
-
-var _mapValuesSeries = require('./mapValuesSeries');
-
-var _mapValuesSeries2 = _interopRequireDefault(_mapValuesSeries);
-
-var _memoize = require('./memoize');
-
-var _memoize2 = _interopRequireDefault(_memoize);
-
-var _nextTick = require('./nextTick');
-
-var _nextTick2 = _interopRequireDefault(_nextTick);
-
-var _parallel = require('./parallel');
-
-var _parallel2 = _interopRequireDefault(_parallel);
-
-var _parallelLimit = require('./parallelLimit');
-
-var _parallelLimit2 = _interopRequireDefault(_parallelLimit);
-
-var _priorityQueue = require('./priorityQueue');
-
-var _priorityQueue2 = _interopRequireDefault(_priorityQueue);
-
-var _queue = require('./queue');
-
-var _queue2 = _interopRequireDefault(_queue);
-
-var _race = require('./race');
-
-var _race2 = _interopRequireDefault(_race);
-
-var _reduce = require('./reduce');
-
-var _reduce2 = _interopRequireDefault(_reduce);
-
-var _reduceRight = require('./reduceRight');
-
-var _reduceRight2 = _interopRequireDefault(_reduceRight);
-
-var _reflect = require('./reflect');
-
-var _reflect2 = _interopRequireDefault(_reflect);
-
-var _reflectAll = require('./reflectAll');
-
-var _reflectAll2 = _interopRequireDefault(_reflectAll);
-
-var _reject = require('./reject');
-
-var _reject2 = _interopRequireDefault(_reject);
-
-var _rejectLimit = require('./rejectLimit');
-
-var _rejectLimit2 = _interopRequireDefault(_rejectLimit);
-
-var _rejectSeries = require('./rejectSeries');
-
-var _rejectSeries2 = _interopRequireDefault(_rejectSeries);
-
-var _retry = require('./retry');
-
-var _retry2 = _interopRequireDefault(_retry);
-
-var _retryable = require('./retryable');
-
-var _retryable2 = _interopRequireDefault(_retryable);
-
-var _seq = require('./seq');
-
-var _seq2 = _interopRequireDefault(_seq);
-
-var _series = require('./series');
-
-var _series2 = _interopRequireDefault(_series);
-
-var _setImmediate = require('./setImmediate');
-
-var _setImmediate2 = _interopRequireDefault(_setImmediate);
-
-var _some = require('./some');
-
-var _some2 = _interopRequireDefault(_some);
-
-var _someLimit = require('./someLimit');
-
-var _someLimit2 = _interopRequireDefault(_someLimit);
-
-var _someSeries = require('./someSeries');
-
-var _someSeries2 = _interopRequireDefault(_someSeries);
-
-var _sortBy = require('./sortBy');
-
-var _sortBy2 = _interopRequireDefault(_sortBy);
-
-var _timeout = require('./timeout');
-
-var _timeout2 = _interopRequireDefault(_timeout);
-
-var _times = require('./times');
-
-var _times2 = _interopRequireDefault(_times);
-
-var _timesLimit = require('./timesLimit');
-
-var _timesLimit2 = _interopRequireDefault(_timesLimit);
-
-var _timesSeries = require('./timesSeries');
-
-var _timesSeries2 = _interopRequireDefault(_timesSeries);
-
-var _transform = require('./transform');
-
-var _transform2 = _interopRequireDefault(_transform);
-
-var _tryEach = require('./tryEach');
-
-var _tryEach2 = _interopRequireDefault(_tryEach);
-
-var _unmemoize = require('./unmemoize');
-
-var _unmemoize2 = _interopRequireDefault(_unmemoize);
-
-var _until = require('./until');
-
-var _until2 = _interopRequireDefault(_until);
-
-var _waterfall = require('./waterfall');
-
-var _waterfall2 = _interopRequireDefault(_waterfall);
-
-var _whilst = require('./whilst');
-
-var _whilst2 = _interopRequireDefault(_whilst);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 /**
- * An "async function" in the context of Async is an asynchronous function with
- * a variable number of parameters, with the final parameter being a callback.
- * (`function (arg1, arg2, ..., callback) {}`)
- * The final callback is of the form `callback(err, results...)`, which must be
- * called once the function is completed.  The callback should be called with a
- * Error as its first argument to signal that an error occurred.
- * Otherwise, if no error occurred, it should be called with `null` as the first
- * argument, and any additional `result` arguments that may apply, to signal
- * successful completion.
- * The callback must be called exactly once, ideally on a later tick of the
- * JavaScript event loop.
- *
- * This type of function is also referred to as a "Node-style async function",
- * or a "continuation passing-style function" (CPS). Most of the methods of this
- * library are themselves CPS/Node-style async functions, or functions that
- * return CPS/Node-style async functions.
- *
- * Wherever we accept a Node-style async function, we also directly accept an
- * [ES2017 `async` function]{@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function}.
- * In this case, the `async` function will not be passed a final callback
- * argument, and any thrown error will be used as the `err` argument of the
- * implicit callback, and the return value will be used as the `result` value.
- * (i.e. a `rejected` of the returned Promise becomes the `err` callback
- * argument, and a `resolved` value becomes the `result`.)
- *
- * Note, due to JavaScript limitations, we can only detect native `async`
- * functions and not transpilied implementations.
- * Your environment must have `async`/`await` support for this to work.
- * (e.g. Node > v7.6, or a recent version of a modern browser).
- * If you are using `async` functions through a transpiler (e.g. Babel), you
- * must still wrap the function with [asyncify]{@link module:Utils.asyncify},
- * because the `async function` will be compiled to an ordinary function that
- * returns a promise.
- *
- * @typedef {Function} AsyncFunction
- * @static
+ * Create a new instance
  */
+function Kareem() {
+  this._pres = new Map();
+  this._posts = new Map();
+}
 
-/**
- * Async is a utility module which provides straight-forward, powerful functions
- * for working with asynchronous JavaScript. Although originally designed for
- * use with [Node.js](http://nodejs.org) and installable via
- * `npm install --save async`, it can also be used directly in the browser.
- * @module async
- * @see AsyncFunction
- */
+Kareem.skipWrappedFunction = function skipWrappedFunction() {
+  if (!(this instanceof Kareem.skipWrappedFunction)) {
+    return new Kareem.skipWrappedFunction(...arguments);
+  }
 
-/**
- * A collection of `async` functions for manipulating collections, such as
- * arrays and objects.
- * @module Collections
- */
-
-/**
- * A collection of `async` functions for controlling the flow through a script.
- * @module ControlFlow
- */
-
-/**
- * A collection of `async` utility functions.
- * @module Utils
- */
-
-exports.default = {
-    apply: _apply2.default,
-    applyEach: _applyEach2.default,
-    applyEachSeries: _applyEachSeries2.default,
-    asyncify: _asyncify2.default,
-    auto: _auto2.default,
-    autoInject: _autoInject2.default,
-    cargo: _cargo2.default,
-    cargoQueue: _cargoQueue2.default,
-    compose: _compose2.default,
-    concat: _concat2.default,
-    concatLimit: _concatLimit2.default,
-    concatSeries: _concatSeries2.default,
-    constant: _constant2.default,
-    detect: _detect2.default,
-    detectLimit: _detectLimit2.default,
-    detectSeries: _detectSeries2.default,
-    dir: _dir2.default,
-    doUntil: _doUntil2.default,
-    doWhilst: _doWhilst2.default,
-    each: _each2.default,
-    eachLimit: _eachLimit2.default,
-    eachOf: _eachOf2.default,
-    eachOfLimit: _eachOfLimit2.default,
-    eachOfSeries: _eachOfSeries2.default,
-    eachSeries: _eachSeries2.default,
-    ensureAsync: _ensureAsync2.default,
-    every: _every2.default,
-    everyLimit: _everyLimit2.default,
-    everySeries: _everySeries2.default,
-    filter: _filter2.default,
-    filterLimit: _filterLimit2.default,
-    filterSeries: _filterSeries2.default,
-    forever: _forever2.default,
-    groupBy: _groupBy2.default,
-    groupByLimit: _groupByLimit2.default,
-    groupBySeries: _groupBySeries2.default,
-    log: _log2.default,
-    map: _map2.default,
-    mapLimit: _mapLimit2.default,
-    mapSeries: _mapSeries2.default,
-    mapValues: _mapValues2.default,
-    mapValuesLimit: _mapValuesLimit2.default,
-    mapValuesSeries: _mapValuesSeries2.default,
-    memoize: _memoize2.default,
-    nextTick: _nextTick2.default,
-    parallel: _parallel2.default,
-    parallelLimit: _parallelLimit2.default,
-    priorityQueue: _priorityQueue2.default,
-    queue: _queue2.default,
-    race: _race2.default,
-    reduce: _reduce2.default,
-    reduceRight: _reduceRight2.default,
-    reflect: _reflect2.default,
-    reflectAll: _reflectAll2.default,
-    reject: _reject2.default,
-    rejectLimit: _rejectLimit2.default,
-    rejectSeries: _rejectSeries2.default,
-    retry: _retry2.default,
-    retryable: _retryable2.default,
-    seq: _seq2.default,
-    series: _series2.default,
-    setImmediate: _setImmediate2.default,
-    some: _some2.default,
-    someLimit: _someLimit2.default,
-    someSeries: _someSeries2.default,
-    sortBy: _sortBy2.default,
-    timeout: _timeout2.default,
-    times: _times2.default,
-    timesLimit: _timesLimit2.default,
-    timesSeries: _timesSeries2.default,
-    transform: _transform2.default,
-    tryEach: _tryEach2.default,
-    unmemoize: _unmemoize2.default,
-    until: _until2.default,
-    waterfall: _waterfall2.default,
-    whilst: _whilst2.default,
-
-    // aliases
-    all: _every2.default,
-    allLimit: _everyLimit2.default,
-    allSeries: _everySeries2.default,
-    any: _some2.default,
-    anyLimit: _someLimit2.default,
-    anySeries: _someSeries2.default,
-    find: _detect2.default,
-    findLimit: _detectLimit2.default,
-    findSeries: _detectSeries2.default,
-    flatMap: _concat2.default,
-    flatMapLimit: _concatLimit2.default,
-    flatMapSeries: _concatSeries2.default,
-    forEach: _each2.default,
-    forEachSeries: _eachSeries2.default,
-    forEachLimit: _eachLimit2.default,
-    forEachOf: _eachOf2.default,
-    forEachOfSeries: _eachOfSeries2.default,
-    forEachOfLimit: _eachOfLimit2.default,
-    inject: _reduce2.default,
-    foldl: _reduce2.default,
-    foldr: _reduceRight2.default,
-    select: _filter2.default,
-    selectLimit: _filterLimit2.default,
-    selectSeries: _filterSeries2.default,
-    wrapSync: _asyncify2.default,
-    during: _whilst2.default,
-    doDuring: _doWhilst2.default
+  this.args = [...arguments];
 };
-exports.apply = _apply2.default;
-exports.applyEach = _applyEach2.default;
-exports.applyEachSeries = _applyEachSeries2.default;
-exports.asyncify = _asyncify2.default;
-exports.auto = _auto2.default;
-exports.autoInject = _autoInject2.default;
-exports.cargo = _cargo2.default;
-exports.cargoQueue = _cargoQueue2.default;
-exports.compose = _compose2.default;
-exports.concat = _concat2.default;
-exports.concatLimit = _concatLimit2.default;
-exports.concatSeries = _concatSeries2.default;
-exports.constant = _constant2.default;
-exports.detect = _detect2.default;
-exports.detectLimit = _detectLimit2.default;
-exports.detectSeries = _detectSeries2.default;
-exports.dir = _dir2.default;
-exports.doUntil = _doUntil2.default;
-exports.doWhilst = _doWhilst2.default;
-exports.each = _each2.default;
-exports.eachLimit = _eachLimit2.default;
-exports.eachOf = _eachOf2.default;
-exports.eachOfLimit = _eachOfLimit2.default;
-exports.eachOfSeries = _eachOfSeries2.default;
-exports.eachSeries = _eachSeries2.default;
-exports.ensureAsync = _ensureAsync2.default;
-exports.every = _every2.default;
-exports.everyLimit = _everyLimit2.default;
-exports.everySeries = _everySeries2.default;
-exports.filter = _filter2.default;
-exports.filterLimit = _filterLimit2.default;
-exports.filterSeries = _filterSeries2.default;
-exports.forever = _forever2.default;
-exports.groupBy = _groupBy2.default;
-exports.groupByLimit = _groupByLimit2.default;
-exports.groupBySeries = _groupBySeries2.default;
-exports.log = _log2.default;
-exports.map = _map2.default;
-exports.mapLimit = _mapLimit2.default;
-exports.mapSeries = _mapSeries2.default;
-exports.mapValues = _mapValues2.default;
-exports.mapValuesLimit = _mapValuesLimit2.default;
-exports.mapValuesSeries = _mapValuesSeries2.default;
-exports.memoize = _memoize2.default;
-exports.nextTick = _nextTick2.default;
-exports.parallel = _parallel2.default;
-exports.parallelLimit = _parallelLimit2.default;
-exports.priorityQueue = _priorityQueue2.default;
-exports.queue = _queue2.default;
-exports.race = _race2.default;
-exports.reduce = _reduce2.default;
-exports.reduceRight = _reduceRight2.default;
-exports.reflect = _reflect2.default;
-exports.reflectAll = _reflectAll2.default;
-exports.reject = _reject2.default;
-exports.rejectLimit = _rejectLimit2.default;
-exports.rejectSeries = _rejectSeries2.default;
-exports.retry = _retry2.default;
-exports.retryable = _retryable2.default;
-exports.seq = _seq2.default;
-exports.series = _series2.default;
-exports.setImmediate = _setImmediate2.default;
-exports.some = _some2.default;
-exports.someLimit = _someLimit2.default;
-exports.someSeries = _someSeries2.default;
-exports.sortBy = _sortBy2.default;
-exports.timeout = _timeout2.default;
-exports.times = _times2.default;
-exports.timesLimit = _timesLimit2.default;
-exports.timesSeries = _timesSeries2.default;
-exports.transform = _transform2.default;
-exports.tryEach = _tryEach2.default;
-exports.unmemoize = _unmemoize2.default;
-exports.until = _until2.default;
-exports.waterfall = _waterfall2.default;
-exports.whilst = _whilst2.default;
-exports.all = _every2.default;
-exports.allLimit = _everyLimit2.default;
-exports.allSeries = _everySeries2.default;
-exports.any = _some2.default;
-exports.anyLimit = _someLimit2.default;
-exports.anySeries = _someSeries2.default;
-exports.find = _detect2.default;
-exports.findLimit = _detectLimit2.default;
-exports.findSeries = _detectSeries2.default;
-exports.flatMap = _concat2.default;
-exports.flatMapLimit = _concatLimit2.default;
-exports.flatMapSeries = _concatSeries2.default;
-exports.forEach = _each2.default;
-exports.forEachSeries = _eachSeries2.default;
-exports.forEachLimit = _eachLimit2.default;
-exports.forEachOf = _eachOf2.default;
-exports.forEachOfSeries = _eachOfSeries2.default;
-exports.forEachOfLimit = _eachOfLimit2.default;
-exports.inject = _reduce2.default;
-exports.foldl = _reduce2.default;
-exports.foldr = _reduceRight2.default;
-exports.select = _filter2.default;
-exports.selectLimit = _filterLimit2.default;
-exports.selectSeries = _filterSeries2.default;
-exports.wrapSync = _asyncify2.default;
-exports.during = _whilst2.default;
-exports.doDuring = _doWhilst2.default;
+
+Kareem.overwriteResult = function overwriteResult() {
+  if (!(this instanceof Kareem.overwriteResult)) {
+    return new Kareem.overwriteResult(...arguments);
+  }
+
+  this.args = [...arguments];
+};
+
+/**
+ * Execute all "pre" hooks for "name"
+ * @param {String} name The hook name to execute
+ * @param {*} context Overwrite the "this" for the hook
+ * @param {Array|Function} args Optional arguments or directly the callback
+ * @param {Function} [callback] The callback to call when executing all hooks are finished
+ * @returns {void}
+ */
+Kareem.prototype.execPre = function(name, context, args, callback) {
+  if (arguments.length === 3) {
+    callback = args;
+    args = [];
+  }
+  const pres = this._pres.get(name) || [];
+  const numPres = pres.length;
+  const numAsyncPres = pres.numAsync || 0;
+  let currentPre = 0;
+  let asyncPresLeft = numAsyncPres;
+  let done = false;
+  const $args = args;
+  let shouldSkipWrappedFunction = null;
+
+  if (!numPres) {
+    return nextTick(function() {
+      callback(null);
+    });
+  }
+
+  function next() {
+    if (currentPre >= numPres) {
+      return;
+    }
+    const pre = pres[currentPre];
+
+    if (pre.isAsync) {
+      const args = [
+        decorateNextFn(_next),
+        decorateNextFn(function(error) {
+          if (error) {
+            if (done) {
+              return;
+            }
+            if (error instanceof Kareem.skipWrappedFunction) {
+              shouldSkipWrappedFunction = error;
+            } else {
+              done = true;
+              return callback(error);
+            }
+          }
+          if (--asyncPresLeft === 0 && currentPre >= numPres) {
+            return callback(shouldSkipWrappedFunction);
+          }
+        })
+      ];
+
+      callMiddlewareFunction(pre.fn, context, args, args[0]);
+    } else if (pre.fn.length > 0) {
+      const args = [decorateNextFn(_next)];
+      const _args = arguments.length >= 2 ? arguments : [null].concat($args);
+      for (let i = 1; i < _args.length; ++i) {
+        if (i === _args.length - 1 && typeof _args[i] === 'function') {
+          continue; // skip callbacks to avoid accidentally calling the callback from a hook
+        }
+        args.push(_args[i]);
+      }
+
+      callMiddlewareFunction(pre.fn, context, args, args[0]);
+    } else {
+      let maybePromiseLike = null;
+      try {
+        maybePromiseLike = pre.fn.call(context);
+      } catch (err) {
+        if (err != null) {
+          return callback(err);
+        }
+      }
+
+      if (isPromiseLike(maybePromiseLike)) {
+        maybePromiseLike.then(() => _next(), err => _next(err));
+      } else {
+        if (++currentPre >= numPres) {
+          if (asyncPresLeft > 0) {
+            // Leave parallel hooks to run
+            return;
+          } else {
+            return nextTick(function() {
+              callback(shouldSkipWrappedFunction);
+            });
+          }
+        }
+        next();
+      }
+    }
+  }
+
+  next.apply(null, [null].concat(args));
+
+  function _next(error) {
+    if (error) {
+      if (done) {
+        return;
+      }
+      if (error instanceof Kareem.skipWrappedFunction) {
+        shouldSkipWrappedFunction = error;
+      } else {
+        done = true;
+        return callback(error);
+      }
+    }
+
+    if (++currentPre >= numPres) {
+      if (asyncPresLeft > 0) {
+        // Leave parallel hooks to run
+        return;
+      } else {
+        return callback(shouldSkipWrappedFunction);
+      }
+    }
+
+    next.apply(context, arguments);
+  }
+};
+
+/**
+ * Execute all "pre" hooks for "name" synchronously
+ * @param {String} name The hook name to execute
+ * @param {*} context Overwrite the "this" for the hook
+ * @param {Array} [args] Apply custom arguments to the hook
+ * @returns {void}
+ */
+Kareem.prototype.execPreSync = function(name, context, args) {
+  const pres = this._pres.get(name) || [];
+  const numPres = pres.length;
+
+  for (let i = 0; i < numPres; ++i) {
+    pres[i].fn.apply(context, args || []);
+  }
+};
+
+/**
+ * Execute all "post" hooks for "name"
+ * @param {String} name The hook name to execute
+ * @param {*} context Overwrite the "this" for the hook
+ * @param {Array|Function} args Apply custom arguments to the hook
+ * @param {*} options Optional options or directly the callback
+ * @param {Function} [callback] The callback to call when executing all hooks are finished
+ * @returns {void}
+ */
+Kareem.prototype.execPost = function(name, context, args, options, callback) {
+  if (arguments.length < 5) {
+    callback = options;
+    options = null;
+  }
+  const posts = this._posts.get(name) || [];
+  const numPosts = posts.length;
+  let currentPost = 0;
+
+  let firstError = null;
+  if (options && options.error) {
+    firstError = options.error;
+  }
+
+  if (!numPosts) {
+    return nextTick(function() {
+      callback.apply(null, [firstError].concat(args));
+    });
+  }
+
+  function next() {
+    const post = posts[currentPost].fn;
+    let numArgs = 0;
+    const argLength = args.length;
+    const newArgs = [];
+    for (let i = 0; i < argLength; ++i) {
+      numArgs += args[i] && args[i]._kareemIgnore ? 0 : 1;
+      if (!args[i] || !args[i]._kareemIgnore) {
+        newArgs.push(args[i]);
+      }
+    }
+
+    if (firstError) {
+      if (isErrorHandlingMiddleware(posts[currentPost], numArgs)) {
+        const _cb = decorateNextFn(function(error) {
+          if (error) {
+            if (error instanceof Kareem.overwriteResult) {
+              args = error.args;
+              if (++currentPost >= numPosts) {
+                return callback.call(null, firstError);
+              }
+              return next();
+            }
+            firstError = error;
+          }
+          if (++currentPost >= numPosts) {
+            return callback.call(null, firstError);
+          }
+          next();
+        });
+
+        callMiddlewareFunction(post, context,
+          [firstError].concat(newArgs).concat([_cb]), _cb);
+      } else {
+        if (++currentPost >= numPosts) {
+          return callback.call(null, firstError);
+        }
+        next();
+      }
+    } else {
+      const _cb = decorateNextFn(function(error) {
+        if (error) {
+          if (error instanceof Kareem.overwriteResult) {
+            args = error.args;
+            if (++currentPost >= numPosts) {
+              return callback.apply(null, [null].concat(args));
+            }
+            return next();
+          }
+          firstError = error;
+          return next();
+        }
+
+        if (++currentPost >= numPosts) {
+          return callback.apply(null, [null].concat(args));
+        }
+
+        next();
+      });
+
+      if (isErrorHandlingMiddleware(posts[currentPost], numArgs)) {
+        // Skip error handlers if no error
+        if (++currentPost >= numPosts) {
+          return callback.apply(null, [null].concat(args));
+        }
+        return next();
+      }
+      if (post.length === numArgs + 1) {
+        callMiddlewareFunction(post, context, newArgs.concat([_cb]), _cb);
+      } else {
+        let error;
+        let maybePromiseLike;
+        try {
+          maybePromiseLike = post.apply(context, newArgs);
+        } catch (err) {
+          error = err;
+          firstError = err;
+        }
+
+        if (isPromiseLike(maybePromiseLike)) {
+          return maybePromiseLike.then(
+            (res) => {
+              _cb(res instanceof Kareem.overwriteResult ? res : null);
+            },
+            err => _cb(err)
+          );
+        }
+
+        if (maybePromiseLike instanceof Kareem.overwriteResult) {
+          args = maybePromiseLike.args;
+        }
+
+        if (++currentPost >= numPosts) {
+          return callback.apply(null, [error].concat(args));
+        }
+
+        next();
+      }
+    }
+  }
+
+  next();
+};
+
+/**
+ * Execute all "post" hooks for "name" synchronously
+ * @param {String} name The hook name to execute
+ * @param {*} context Overwrite the "this" for the hook
+ * @param {Array|Function} args Apply custom arguments to the hook
+ * @returns {Array} The used arguments
+ */
+Kareem.prototype.execPostSync = function(name, context, args) {
+  const posts = this._posts.get(name) || [];
+  const numPosts = posts.length;
+
+  for (let i = 0; i < numPosts; ++i) {
+    const res = posts[i].fn.apply(context, args || []);
+    if (res instanceof Kareem.overwriteResult) {
+      args = res.args;
+    }
+  }
+
+  return args;
+};
+
+/**
+ * Create a synchronous wrapper for "fn"
+ * @param {String} name The name of the hook
+ * @param {Function} fn The function to wrap
+ * @returns {Function} The wrapped function
+ */
+Kareem.prototype.createWrapperSync = function(name, fn) {
+  const _this = this;
+  return function syncWrapper() {
+    _this.execPreSync(name, this, arguments);
+
+    const toReturn = fn.apply(this, arguments);
+
+    const result = _this.execPostSync(name, this, [toReturn]);
+
+    return result[0];
+  };
+};
+
+function _handleWrapError(instance, error, name, context, args, options, callback) {
+  if (options.useErrorHandlers) {
+    return instance.execPost(name, context, args, { error: error }, function(error) {
+      return typeof callback === 'function' && callback(error);
+    });
+  } else {
+    return typeof callback === 'function' && callback(error);
+  }
+}
+
+/**
+ * Executes pre hooks, followed by the wrapped function, followed by post hooks.
+ * @param {String} name The name of the hook
+ * @param {Function} fn The function for the hook
+ * @param {*} context Overwrite the "this" for the hook
+ * @param {Array} args Apply custom arguments to the hook
+ * @param {Object} [options]
+ * @param {Boolean} [options.checkForPromise]
+ * @returns {void}
+ */
+Kareem.prototype.wrap = function(name, fn, context, args, options) {
+  const lastArg = (args.length > 0 ? args[args.length - 1] : null);
+  const argsWithoutCb = Array.from(args);
+  typeof lastArg === 'function' && argsWithoutCb.pop();
+  const _this = this;
+
+  options = options || {};
+  const checkForPromise = options.checkForPromise;
+
+  this.execPre(name, context, args, function(error) {
+    if (error && !(error instanceof Kareem.skipWrappedFunction)) {
+      const numCallbackParams = options.numCallbackParams || 0;
+      const errorArgs = options.contextParameter ? [context] : [];
+      for (let i = errorArgs.length; i < numCallbackParams; ++i) {
+        errorArgs.push(null);
+      }
+      return _handleWrapError(_this, error, name, context, errorArgs,
+        options, lastArg);
+    }
+
+    const numParameters = fn.length;
+    let ret;
+
+    if (error instanceof Kareem.skipWrappedFunction) {
+      ret = error.args[0];
+      return _cb(null, ...error.args);
+    } else {
+      try {
+        ret = fn.apply(context, argsWithoutCb.concat(_cb));
+      } catch (err) {
+        return _cb(err);
+      }
+    }
+
+    if (checkForPromise) {
+      if (isPromiseLike(ret)) {
+        // Thenable, use it
+        return ret.then(
+          res => _cb(null, res),
+          err => _cb(err)
+        );
+      }
+
+      // If `fn()` doesn't have a callback argument and doesn't return a
+      // promise, assume it is sync
+      if (numParameters < argsWithoutCb.length + 1) {
+        return _cb(null, ret);
+      }
+    }
+
+    function _cb() {
+      const argsWithoutError = Array.from(arguments);
+      argsWithoutError.shift();
+      if (options.nullResultByDefault && argsWithoutError.length === 0) {
+        argsWithoutError.push(null);
+      }
+      if (arguments[0]) {
+        // Assume error
+        return _handleWrapError(_this, arguments[0], name, context,
+          argsWithoutError, options, lastArg);
+      } else {
+        _this.execPost(name, context, argsWithoutError, function() {
+          if (lastArg === null) {
+            return;
+          }
+          arguments[0]
+            ? lastArg(arguments[0])
+            : lastArg.apply(context, arguments);
+        });
+      }
+    }
+  });
+};
+
+/**
+ * Filter current instance for something specific and return the filtered clone
+ * @param {Function} fn The filter function
+ * @returns {Kareem} The cloned and filtered instance
+ */
+Kareem.prototype.filter = function(fn) {
+  const clone = this.clone();
+
+  const pres = Array.from(clone._pres.keys());
+  for (const name of pres) {
+    const hooks = this._pres.get(name).
+      map(h => Object.assign({}, h, { name: name })).
+      filter(fn);
+
+    if (hooks.length === 0) {
+      clone._pres.delete(name);
+      continue;
+    }
+
+    hooks.numAsync = hooks.filter(h => h.isAsync).length;
+
+    clone._pres.set(name, hooks);
+  }
+
+  const posts = Array.from(clone._posts.keys());
+  for (const name of posts) {
+    const hooks = this._posts.get(name).
+      map(h => Object.assign({}, h, { name: name })).
+      filter(fn);
+
+    if (hooks.length === 0) {
+      clone._posts.delete(name);
+      continue;
+    }
+
+    clone._posts.set(name, hooks);
+  }
+
+  return clone;
+};
+
+/**
+ * Check for a "name" to exist either in pre or post hooks
+ * @param {String} name The name of the hook
+ * @returns {Boolean} "true" if found, "false" otherwise
+ */
+Kareem.prototype.hasHooks = function(name) {
+  return this._pres.has(name) || this._posts.has(name);
+};
+
+/**
+ * Create a Wrapper for "fn" on "name" and return the wrapped function
+ * @param {String} name The name of the hook
+ * @param {Function} fn The function to wrap
+ * @param {*} context Overwrite the "this" for the hook
+ * @param {Object} [options]
+ * @returns {Function} The wrapped function
+ */
+Kareem.prototype.createWrapper = function(name, fn, context, options) {
+  const _this = this;
+  if (!this.hasHooks(name)) {
+    // Fast path: if there's no hooks for this function, just return the
+    // function wrapped in a nextTick()
+    return function() {
+      nextTick(() => fn.apply(this, arguments));
+    };
+  }
+  return function() {
+    const _context = context || this;
+    _this.wrap(name, fn, _context, Array.from(arguments), options);
+  };
+};
+
+/**
+ * Register a new hook for "pre"
+ * @param {String} name The name of the hook
+ * @param {Boolean} [isAsync]
+ * @param {Function} fn The function to register for "name"
+ * @param {never} error Unused
+ * @param {Boolean} [unshift] Wheter to "push" or to "unshift" the new hook
+ * @returns {Kareem}
+ */
+Kareem.prototype.pre = function(name, isAsync, fn, error, unshift) {
+  let options = {};
+  if (typeof isAsync === 'object' && isAsync !== null) {
+    options = isAsync;
+    isAsync = options.isAsync;
+  } else if (typeof arguments[1] !== 'boolean') {
+    fn = isAsync;
+    isAsync = false;
+  }
+
+  const pres = this._pres.get(name) || [];
+  this._pres.set(name, pres);
+
+  if (isAsync) {
+    pres.numAsync = pres.numAsync || 0;
+    ++pres.numAsync;
+  }
+
+  if (typeof fn !== 'function') {
+    throw new Error('pre() requires a function, got "' + typeof fn + '"');
+  }
+
+  if (unshift) {
+    pres.unshift(Object.assign({}, options, { fn: fn, isAsync: isAsync }));
+  } else {
+    pres.push(Object.assign({}, options, { fn: fn, isAsync: isAsync }));
+  }
+
+  return this;
+};
+
+/**
+ * Register a new hook for "post"
+ * @param {String} name The name of the hook
+ * @param {Object} [options]
+ * @param {Function} fn The function to register for "name"
+ * @param {Boolean} [unshift] Wheter to "push" or to "unshift" the new hook
+ * @returns {Kareem}
+ */
+Kareem.prototype.post = function(name, options, fn, unshift) {
+  const posts = this._posts.get(name) || [];
+
+  if (typeof options === 'function') {
+    unshift = !!fn;
+    fn = options;
+    options = {};
+  }
+
+  if (typeof fn !== 'function') {
+    throw new Error('post() requires a function, got "' + typeof fn + '"');
+  }
+
+  if (unshift) {
+    posts.unshift(Object.assign({}, options, { fn: fn }));
+  } else {
+    posts.push(Object.assign({}, options, { fn: fn }));
+  }
+  this._posts.set(name, posts);
+  return this;
+};
+
+/**
+ * Clone the current instance
+ * @returns {Kareem} The cloned instance
+ */
+Kareem.prototype.clone = function() {
+  const n = new Kareem();
+
+  for (const key of this._pres.keys()) {
+    const clone = this._pres.get(key).slice();
+    clone.numAsync = this._pres.get(key).numAsync;
+    n._pres.set(key, clone);
+  }
+  for (const key of this._posts.keys()) {
+    n._posts.set(key, this._posts.get(key).slice());
+  }
+
+  return n;
+};
+
+/**
+ * Merge "other" into self or "clone"
+ * @param {Kareem} other The instance to merge with
+ * @param {Kareem} [clone] The instance to merge onto (if not defined, using "this")
+ * @returns {Kareem} The merged instance
+ */
+Kareem.prototype.merge = function(other, clone) {
+  clone = arguments.length === 1 ? true : clone;
+  const ret = clone ? this.clone() : this;
+
+  for (const key of other._pres.keys()) {
+    const sourcePres = ret._pres.get(key) || [];
+    const deduplicated = other._pres.get(key).
+      // Deduplicate based on `fn`
+      filter(p => sourcePres.map(_p => _p.fn).indexOf(p.fn) === -1);
+    const combined = sourcePres.concat(deduplicated);
+    combined.numAsync = sourcePres.numAsync || 0;
+    combined.numAsync += deduplicated.filter(p => p.isAsync).length;
+    ret._pres.set(key, combined);
+  }
+  for (const key of other._posts.keys()) {
+    const sourcePosts = ret._posts.get(key) || [];
+    const deduplicated = other._posts.get(key).
+      filter(p => sourcePosts.indexOf(p) === -1);
+    ret._posts.set(key, sourcePosts.concat(deduplicated));
+  }
+
+  return ret;
+};
+
+function callMiddlewareFunction(fn, context, args, next) {
+  let maybePromiseLike;
+  try {
+    maybePromiseLike = fn.apply(context, args);
+  } catch (error) {
+    return next(error);
+  }
+
+  if (isPromiseLike(maybePromiseLike)) {
+    maybePromiseLike.then(() => next(), err => next(err));
+  }
+}
+
+function isPromiseLike(v) {
+  return (typeof v === 'object' && v !== null && typeof v.then === 'function');
+}
+
+function decorateNextFn(fn) {
+  let called = false;
+  const _this = this;
+  return function() {
+    // Ensure this function can only be called once
+    if (called) {
+      return;
+    }
+    called = true;
+    // Make sure to clear the stack so try/catch doesn't catch errors
+    // in subsequent middleware
+    return nextTick(() => fn.apply(_this, arguments));
+  };
+}
+
+const nextTick = typeof process === 'object' && process !== null && process.nextTick || function nextTick(cb) {
+  setTimeout(cb, 0);
+};
+
+function isErrorHandlingMiddleware(post, numArgs) {
+  if (post.errorHandler) {
+    return true;
+  }
+  return post.fn.length === numArgs + 2;
+}
+
+module.exports = Kareem;

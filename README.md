@@ -1,233 +1,419 @@
-# ipaddr.js — an IPv6 and IPv4 address manipulation library [![Build Status](https://travis-ci.org/whitequark/ipaddr.js.svg)](https://travis-ci.org/whitequark/ipaddr.js)
+# kareem
 
-ipaddr.js is a small (1.9K minified and gzipped) library for manipulating
-IP addresses in JavaScript environments. It runs on both CommonJS runtimes
-(e.g. [nodejs]) and in a web browser.
+  [![Build Status](https://github.com/mongoosejs/kareem/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/mongoosejs/kareem/actions/workflows/test.yml)
+  <!--[![Coverage Status](https://img.shields.io/coveralls/vkarpov15/kareem.svg)](https://coveralls.io/r/vkarpov15/kareem)-->
 
-ipaddr.js allows you to verify and parse string representation of an IP
-address, match it against a CIDR range or range list, determine if it falls
-into some reserved ranges (examples include loopback and private ranges),
-and convert between IPv4 and IPv4-mapped IPv6 addresses.
+Re-imagined take on the [hooks](http://npmjs.org/package/hooks) module, meant to offer additional flexibility in allowing you to execute hooks whenever necessary, as opposed to simply wrapping a single function.
 
-[nodejs]: http://nodejs.org
+Named for the NBA's all-time leading scorer Kareem Abdul-Jabbar, known for his mastery of the [hook shot](http://en.wikipedia.org/wiki/Kareem_Abdul-Jabbar#Skyhook)
 
-## Installation
+<img src="http://upload.wikimedia.org/wikipedia/commons/0/00/Kareem-Abdul-Jabbar_Lipofsky.jpg" width="220">
 
-`npm install ipaddr.js`
+# API
 
-or
+## pre hooks
 
-`bower install ipaddr.js`
+Much like [hooks](https://npmjs.org/package/hooks), kareem lets you define
+pre and post hooks: pre hooks are called before a given function executes.
+Unlike hooks, kareem stores hooks and other internal state in a separate
+object, rather than relying on inheritance. Furthermore, kareem exposes
+an `execPre()` function that allows you to execute your pre hooks when
+appropriate, giving you more fine-grained control over your function hooks.
 
-## API
 
-ipaddr.js defines one object in the global scope: `ipaddr`. In CommonJS,
-it is exported from the module:
+#### It runs without any hooks specified
 
-```js
-var ipaddr = require('ipaddr.js');
+```javascript
+hooks.execPre('cook', null, function() {
+  // ...
+});
 ```
 
-The API consists of several global methods and two classes: ipaddr.IPv6 and ipaddr.IPv4.
+#### It runs basic serial pre hooks
 
-### Global methods
+pre hook functions take one parameter, a "done" function that you execute
+when your pre hook is finished.
 
-There are three global methods defined: `ipaddr.isValid`, `ipaddr.parse` and
-`ipaddr.process`. All of them receive a string as a single parameter.
 
-The `ipaddr.isValid` method returns `true` if the address is a valid IPv4 or
-IPv6 address, and `false` otherwise. It does not throw any exceptions.
+```javascript
+var count = 0;
 
-The `ipaddr.parse` method returns an object representing the IP address,
-or throws an `Error` if the passed string is not a valid representation of an
-IP address.
+hooks.pre('cook', function(done) {
+  ++count;
+  done();
+});
 
-The `ipaddr.process` method works just like the `ipaddr.parse` one, but it
-automatically converts IPv4-mapped IPv6 addresses to their IPv4 counterparts
-before returning. It is useful when you have a Node.js instance listening
-on an IPv6 socket, and the `net.ivp6.bindv6only` sysctl parameter (or its
-equivalent on non-Linux OS) is set to 0. In this case, you can accept IPv4
-connections on your IPv6-only socket, but the remote address will be mangled.
-Use `ipaddr.process` method to automatically demangle it.
-
-### Object representation
-
-Parsing methods return an object which descends from `ipaddr.IPv6` or
-`ipaddr.IPv4`. These objects share some properties, but most of them differ.
-
-#### Shared properties
-
-One can determine the type of address by calling `addr.kind()`. It will return
-either `"ipv6"` or `"ipv4"`.
-
-An address can be converted back to its string representation with `addr.toString()`.
-Note that this method:
- * does not return the original string used to create the object (in fact, there is
-   no way of getting that string)
- * returns a compact representation (when it is applicable)
-
-A `match(range, bits)` method can be used to check if the address falls into a
-certain CIDR range.
-Note that an address can be (obviously) matched only against an address of the same type.
-
-For example:
-
-```js
-var addr = ipaddr.parse("2001:db8:1234::1");
-var range = ipaddr.parse("2001:db8::");
-
-addr.match(range, 32); // => true
+hooks.execPre('cook', null, function() {
+  assert.equal(1, count);
+});
 ```
 
-Alternatively, `match` can also be called as `match([range, bits])`. In this way,
-it can be used together with the `parseCIDR(string)` method, which parses an IP
-address together with a CIDR range.
+#### It can run multipe pre hooks
 
-For example:
+```javascript
+var count1 = 0;
+var count2 = 0;
 
-```js
-var addr = ipaddr.parse("2001:db8:1234::1");
+hooks.pre('cook', function(done) {
+  ++count1;
+  done();
+});
 
-addr.match(ipaddr.parseCIDR("2001:db8::/32")); // => true
+hooks.pre('cook', function(done) {
+  ++count2;
+  done();
+});
+
+hooks.execPre('cook', null, function() {
+  assert.equal(1, count1);
+  assert.equal(1, count2);
+});
 ```
 
-A `range()` method returns one of predefined names for several special ranges defined
-by IP protocols. The exact names (and their respective CIDR ranges) can be looked up
-in the source: [IPv6 ranges] and [IPv4 ranges]. Some common ones include `"unicast"`
-(the default one) and `"reserved"`.
+#### It can run fully synchronous pre hooks
 
-You can match against your own range list by using
-`ipaddr.subnetMatch(address, rangeList, defaultName)` method. It can work with a mix of IPv6 or IPv4 addresses, and accepts a name-to-subnet map as the range list. For example:
+If your pre hook function takes no parameters, its assumed to be
+fully synchronous.
 
-```js
-var rangeList = {
-  documentationOnly: [ ipaddr.parse('2001:db8::'), 32 ],
-  tunnelProviders: [
-    [ ipaddr.parse('2001:470::'), 32 ], // he.net
-    [ ipaddr.parse('2001:5c0::'), 32 ]  // freenet6
-  ]
-};
-ipaddr.subnetMatch(ipaddr.parse('2001:470:8:66::1'), rangeList, 'unknown'); // => "tunnelProviders"
+
+```javascript
+var count1 = 0;
+var count2 = 0;
+
+hooks.pre('cook', function() {
+  ++count1;
+});
+
+hooks.pre('cook', function() {
+  ++count2;
+});
+
+hooks.execPre('cook', null, function(error) {
+  assert.equal(null, error);
+  assert.equal(1, count1);
+  assert.equal(1, count2);
+});
 ```
 
-The addresses can be converted to their byte representation with `toByteArray()`.
-(Actually, JavaScript mostly does not know about byte buffers. They are emulated with
-arrays of numbers, each in range of 0..255.)
+#### It properly attaches context to pre hooks
 
-```js
-var bytes = ipaddr.parse('2a00:1450:8007::68').toByteArray(); // ipv6.google.com
-bytes // => [42, 0x00, 0x14, 0x50, 0x80, 0x07, 0x00, <zeroes...>, 0x00, 0x68 ]
+Pre save hook functions are bound to the second parameter to `execPre()`
+
+
+```javascript
+hooks.pre('cook', function(done) {
+  this.bacon = 3;
+  done();
+});
+
+hooks.pre('cook', function(done) {
+  this.eggs = 4;
+  done();
+});
+
+var obj = { bacon: 0, eggs: 0 };
+
+// In the pre hooks, `this` will refer to `obj`
+hooks.execPre('cook', obj, function(error) {
+  assert.equal(null, error);
+  assert.equal(3, obj.bacon);
+  assert.equal(4, obj.eggs);
+});
 ```
 
-The `ipaddr.IPv4` and `ipaddr.IPv6` objects have some methods defined, too. All of them
-have the same interface for both protocols, and are similar to global methods.
+#### It can execute parallel (async) pre hooks
 
-`ipaddr.IPvX.isValid(string)` can be used to check if the string is a valid address
-for particular protocol, and `ipaddr.IPvX.parse(string)` is the error-throwing parser.
+Like the hooks module, you can declare "async" pre hooks - these take two
+parameters, the functions `next()` and `done()`. `next()` passes control to
+the next pre hook, but the underlying function won't be called until all
+async pre hooks have called `done()`.
 
-`ipaddr.IPvX.isValid(string)` uses the same format for parsing as the POSIX `inet_ntoa` function, which accepts unusual formats like `0xc0.168.1.1` or `0x10000000`. The function `ipaddr.IPv4.isValidFourPartDecimal(string)` validates the IPv4 address and also ensures that it is written in four-part decimal format.
 
-[IPv6 ranges]: https://github.com/whitequark/ipaddr.js/blob/master/src/ipaddr.coffee#L186
-[IPv4 ranges]: https://github.com/whitequark/ipaddr.js/blob/master/src/ipaddr.coffee#L71
+```javascript
+hooks.pre('cook', true, function(next, done) {
+  this.bacon = 3;
+  next();
+  setTimeout(function() {
+    done();
+  }, 5);
+});
 
-#### IPv6 properties
+hooks.pre('cook', true, function(next, done) {
+  next();
+  var _this = this;
+  setTimeout(function() {
+    _this.eggs = 4;
+    done();
+  }, 10);
+});
 
-Sometimes you will want to convert IPv6 not to a compact string representation (with
-the `::` substitution); the `toNormalizedString()` method will return an address where
-all zeroes are explicit.
+hooks.pre('cook', function(next) {
+  this.waffles = false;
+  next();
+});
 
-For example:
+var obj = { bacon: 0, eggs: 0 };
 
-```js
-var addr = ipaddr.parse("2001:0db8::0001");
-addr.toString(); // => "2001:db8::1"
-addr.toNormalizedString(); // => "2001:db8:0:0:0:0:0:1"
+hooks.execPre('cook', obj, function() {
+  assert.equal(3, obj.bacon);
+  assert.equal(4, obj.eggs);
+  assert.equal(false, obj.waffles);
+});
 ```
 
-The `isIPv4MappedAddress()` method will return `true` if this address is an IPv4-mapped
-one, and `toIPv4Address()` will return an IPv4 object address.
+#### It supports returning a promise
 
-To access the underlying binary representation of the address, use `addr.parts`.
+You can also return a promise from your pre hooks instead of calling
+`next()`. When the returned promise resolves, kareem will kick off the
+next middleware.
 
-```js
-var addr = ipaddr.parse("2001:db8:10::1234:DEAD");
-addr.parts // => [0x2001, 0xdb8, 0x10, 0, 0, 0, 0x1234, 0xdead]
+
+```javascript
+hooks.pre('cook', function() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      this.bacon = 3;
+      resolve();
+    }, 100);
+  });
+});
+
+var obj = { bacon: 0 };
+
+hooks.execPre('cook', obj, function() {
+  assert.equal(3, obj.bacon);
+});
 ```
 
-A IPv6 zone index can be accessed via `addr.zoneId`:
+## post hooks
 
-```js
-var addr = ipaddr.parse("2001:db8::%eth0");
-addr.zoneId // => 'eth0'
+acquit:ignore:end
+
+#### It runs without any hooks specified
+
+```javascript
+hooks.execPost('cook', null, [1], function(error, eggs) {
+  assert.ifError(error);
+  assert.equal(1, eggs);
+  done();
+});
 ```
 
-#### IPv4 properties
+#### It executes with parameters passed in
 
-`toIPv4MappedAddress()` will return a corresponding IPv4-mapped IPv6 address.
+```javascript
+hooks.post('cook', function(eggs, bacon, callback) {
+  assert.equal(1, eggs);
+  assert.equal(2, bacon);
+  callback();
+});
 
-To access the underlying representation of the address, use `addr.octets`.
-
-```js
-var addr = ipaddr.parse("192.168.1.1");
-addr.octets // => [192, 168, 1, 1]
+hooks.execPost('cook', null, [1, 2], function(error, eggs, bacon) {
+  assert.ifError(error);
+  assert.equal(1, eggs);
+  assert.equal(2, bacon);
+});
 ```
 
-`prefixLengthFromSubnetMask()` will return a CIDR prefix length for a valid IPv4 netmask or
-null if the netmask is not valid.
+#### It can use synchronous post hooks
 
-```js
-ipaddr.IPv4.parse('255.255.255.240').prefixLengthFromSubnetMask() == 28
-ipaddr.IPv4.parse('255.192.164.0').prefixLengthFromSubnetMask()  == null
+```javascript
+var execed = {};
+
+hooks.post('cook', function(eggs, bacon) {
+  execed.first = true;
+  assert.equal(1, eggs);
+  assert.equal(2, bacon);
+});
+
+hooks.post('cook', function(eggs, bacon, callback) {
+  execed.second = true;
+  assert.equal(1, eggs);
+  assert.equal(2, bacon);
+  callback();
+});
+
+hooks.execPost('cook', null, [1, 2], function(error, eggs, bacon) {
+  assert.ifError(error);
+  assert.equal(2, Object.keys(execed).length);
+  assert.ok(execed.first);
+  assert.ok(execed.second);
+  assert.equal(1, eggs);
+  assert.equal(2, bacon);
+});
 ```
 
-`subnetMaskFromPrefixLength()` will return an IPv4 netmask for a valid CIDR prefix length.
+#### It supports returning a promise
 
-```js
-ipaddr.IPv4.subnetMaskFromPrefixLength(24) == "255.255.255.0"
-ipaddr.IPv4.subnetMaskFromPrefixLength(29) == "255.255.255.248"
+You can also return a promise from your post hooks instead of calling
+`next()`. When the returned promise resolves, kareem will kick off the
+next middleware.
+
+
+```javascript
+hooks.post('cook', function(bacon) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      this.bacon = 3;
+      resolve();
+    }, 100);
+  });
+});
+
+var obj = { bacon: 0 };
+
+hooks.execPost('cook', obj, obj, function() {
+  assert.equal(obj.bacon, 3);
+});
 ```
 
-`broadcastAddressFromCIDR()` will return the broadcast address for a given IPv4 interface and netmask in CIDR notation.
-```js
-ipaddr.IPv4.broadcastAddressFromCIDR("172.0.0.1/24") == "172.0.0.255"
+## wrap()
+
+acquit:ignore:end
+
+#### It wraps pre and post calls into one call
+
+```javascript
+hooks.pre('cook', true, function(next, done) {
+  this.bacon = 3;
+  next();
+  setTimeout(function() {
+    done();
+  }, 5);
+});
+
+hooks.pre('cook', true, function(next, done) {
+  next();
+  var _this = this;
+  setTimeout(function() {
+    _this.eggs = 4;
+    done();
+  }, 10);
+});
+
+hooks.pre('cook', function(next) {
+  this.waffles = false;
+  next();
+});
+
+hooks.post('cook', function(obj) {
+  obj.tofu = 'no';
+});
+
+var obj = { bacon: 0, eggs: 0 };
+
+var args = [obj];
+args.push(function(error, result) {
+  assert.ifError(error);
+  assert.equal(null, error);
+  assert.equal(3, obj.bacon);
+  assert.equal(4, obj.eggs);
+  assert.equal(false, obj.waffles);
+  assert.equal('no', obj.tofu);
+
+  assert.equal(obj, result);
+});
+
+hooks.wrap(
+  'cook',
+  function(o, callback) {
+    assert.equal(3, obj.bacon);
+    assert.equal(4, obj.eggs);
+    assert.equal(false, obj.waffles);
+    assert.equal(undefined, obj.tofu);
+    callback(null, o);
+  },
+  obj,
+  args);
 ```
-`networkAddressFromCIDR()` will return the network address for a given IPv4 interface and netmask in CIDR notation.
-```js
-ipaddr.IPv4.networkAddressFromCIDR("172.0.0.1/24") == "172.0.0.0"
+
+## createWrapper()
+
+#### It wraps wrap() into a callable function
+
+```javascript
+hooks.pre('cook', true, function(next, done) {
+  this.bacon = 3;
+  next();
+  setTimeout(function() {
+    done();
+  }, 5);
+});
+
+hooks.pre('cook', true, function(next, done) {
+  next();
+  var _this = this;
+  setTimeout(function() {
+    _this.eggs = 4;
+    done();
+  }, 10);
+});
+
+hooks.pre('cook', function(next) {
+  this.waffles = false;
+  next();
+});
+
+hooks.post('cook', function(obj) {
+  obj.tofu = 'no';
+});
+
+var obj = { bacon: 0, eggs: 0 };
+
+var cook = hooks.createWrapper(
+  'cook',
+  function(o, callback) {
+    assert.equal(3, obj.bacon);
+    assert.equal(4, obj.eggs);
+    assert.equal(false, obj.waffles);
+    assert.equal(undefined, obj.tofu);
+    callback(null, o);
+  },
+  obj);
+
+cook(obj, function(error, result) {
+  assert.ifError(error);
+  assert.equal(3, obj.bacon);
+  assert.equal(4, obj.eggs);
+  assert.equal(false, obj.waffles);
+  assert.equal('no', obj.tofu);
+
+  assert.equal(obj, result);
+});
 ```
 
-#### Conversion
+## clone()
 
-IPv4 and IPv6 can be converted bidirectionally to and from network byte order (MSB) byte arrays.
+acquit:ignore:end
 
-The `fromByteArray()` method will take an array and create an appropriate IPv4 or IPv6 object
-if the input satisfies the requirements. For IPv4 it has to be an array of four 8-bit values,
-while for IPv6 it has to be an array of sixteen 8-bit values.
+#### It clones a Kareem object
 
-For example:
-```js
-var addr = ipaddr.fromByteArray([0x7f, 0, 0, 1]);
-addr.toString(); // => "127.0.0.1"
+```javascript
+var k1 = new Kareem();
+k1.pre('cook', function() {});
+k1.post('cook', function() {});
+
+var k2 = k1.clone();
+assert.deepEqual(Array.from(k2._pres.keys()), ['cook']);
+assert.deepEqual(Array.from(k2._posts.keys()), ['cook']);
 ```
 
-or
+## merge()
 
-```js
-var addr = ipaddr.fromByteArray([0x20, 1, 0xd, 0xb8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
-addr.toString(); // => "2001:db8::1"
-```
+#### It pulls hooks from another Kareem object
 
-Both objects also offer a `toByteArray()` method, which returns an array in network byte order (MSB).
+```javascript
+var k1 = new Kareem();
+var test1 = function() {};
+k1.pre('cook', test1);
+k1.post('cook', function() {});
 
-For example:
-```js
-var addr = ipaddr.parse("127.0.0.1");
-addr.toByteArray(); // => [0x7f, 0, 0, 1]
-```
-
-or
-
-```js
-var addr = ipaddr.parse("2001:db8::1");
-addr.toByteArray(); // => [0x20, 1, 0xd, 0xb8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+var k2 = new Kareem();
+var test2 = function() {};
+k2.pre('cook', test2);
+var k3 = k2.merge(k1);
+assert.equal(k3._pres.get('cook').length, 2);
+assert.equal(k3._pres.get('cook')[0].fn, test2);
+assert.equal(k3._pres.get('cook')[1].fn, test1);
+assert.equal(k3._posts.get('cook').length, 1);
 ```

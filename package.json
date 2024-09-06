@@ -1,35 +1,28 @@
 {
-  "name": "ipaddr.js",
-  "description": "A library for manipulating IPv4 and IPv6 addresses in JavaScript.",
-  "version": "1.9.1",
-  "author": "whitequark <whitequark@whitequark.org>",
-  "directories": {
-    "lib": "./lib"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "coffee-script": "~1.12.6",
-    "nodeunit": "^0.11.3",
-    "uglify-js": "~3.0.19"
-  },
+  "name": "kareem",
+  "version": "2.6.3",
+  "description": "Next-generation take on pre/post function hooks",
+  "main": "index.js",
   "scripts": {
-    "test": "cake build test"
+    "lint": "eslint .",
+    "test": "mocha ./test/*",
+    "test-coverage": "nyc --reporter lcov mocha ./test/*",
+    "docs": "node ./docs.js"
   },
-  "files": [
-    "lib/",
-    "LICENSE",
-    "ipaddr.min.js"
-  ],
-  "keywords": [
-    "ip",
-    "ipv4",
-    "ipv6"
-  ],
-  "repository": "git://github.com/whitequark/ipaddr.js",
-  "main": "./lib/ipaddr.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mongoosejs/kareem.git"
+  },
+  "devDependencies": {
+    "acquit": "1.x",
+    "acquit-ignore": "0.2.x",
+    "eslint": "8.20.0",
+    "mocha": "9.2.0",
+    "nyc": "15.1.0"
+  },
+  "author": "Valeri Karpov <val@karpov.io>",
+  "license": "Apache-2.0",
   "engines": {
-    "node": ">= 0.10"
-  },
-  "license": "MIT",
-  "types": "./lib/ipaddr.js.d.ts"
+    "node": ">=12.0.0"
+  }
 }

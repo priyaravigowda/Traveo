@@ -1,5 +1,5 @@
 var convert = require('./convert'),
-    func = convert('constant', require('../constant'), require('./_falseOptions'));
+    func = convert('assignIn', require('../assignIn'));
 
 func.placeholder = require('./placeholder');
 module.exports = func;
