@@ -1,5 +1,5 @@
 var convert = require('./convert'),
-    func = convert('mapValues', require('../mapValues'));
+    func = convert('partial', require('../partial'));
 
 func.placeholder = require('./placeholder');
 module.exports = func;

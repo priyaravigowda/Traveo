@@ -1,5 +1,5 @@
 var convert = require('./convert'),
-    func = convert('mapValues', require('../mapValues'));
+    func = convert('isEmpty', require('../isEmpty'), require('./_falseOptions'));
 
 func.placeholder = require('./placeholder');
 module.exports = func;
